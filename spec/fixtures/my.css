@@ -1,0 +1,16 @@
+div {
+  color: black;
+  font-weight: bold;
+}
+
+div#content {
+  color: green;
+}           
+
+p {
+  color: blue;  
+}
+
+div + p {
+  color: red;  
+}

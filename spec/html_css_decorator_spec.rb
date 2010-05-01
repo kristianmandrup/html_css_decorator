@@ -8,8 +8,11 @@ describe "HtmlCssDecorator" do
 
     cp = CssParser::Parser.new  
     
-    file_name = File.dirname(__FILE__) + '/fixtures/my.css'
-    cp.load_file!(file_name)    
+    doc.xpath('//link[@rel = "stylesheet"]').each do |stylesheet|
+      file_name = File.dirname(__FILE__) + "/fixtures/#{stylesheet['href']}"
+      puts "load stylesheet: #{file_name}"
+      cp.load_file!(file_name)      
+    end
 
     @list = {}
     

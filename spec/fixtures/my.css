@@ -7,10 +7,3 @@ div#content {
   color: green;
 }           
 
-p {
-  color: blue;  
-}
-
-div + p {
-  color: red;  
-}

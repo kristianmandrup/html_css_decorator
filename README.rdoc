@@ -1,6 +1,8 @@
 = html_css_decorator
 
-Description goes here.
+Populates a Nokogiri HTML document with CSS information on nodes where CSS styles apply. The CSS information is the resulting CSS styles which would apply for the
+given element if it was shown in a browser. The tool should correctly use specification rules as defined by W3C. The tool uses my own extension of 'Css_parser' by Alex Dunae.
+The Css_parser used is version 1.1.2, available from my github@kristianmandrup account.
 
 == Note on Patches/Pull Requests
  

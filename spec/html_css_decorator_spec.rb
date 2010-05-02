@@ -3,10 +3,11 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 describe "HtmlCssDecorator" do
   it "works" do
     doc = Nokogiri::HTML(File.open 'fixtures/test.html')
-    doc.extend(CssModel).extend_elems!
-    doc.base_path = File.dirname(__FILE__) + "/fixtures/"
-    doc.apply_css!
     
+    doc.decorators(Nokogiri::XML::Element) << CSS::Element
+    doc.decorate!             
+    doc.extend(CSS::Model).base_path(File.dirname(__FILE__) + "/fixtures/").apply_css!
+        
     doc.css('*').each do |elem|  
       puts show(elem)
     end

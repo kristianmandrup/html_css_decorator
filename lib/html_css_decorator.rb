@@ -1,34 +1,30 @@
 require 'nokogiri'
 require 'css_parser'
-
-require 'selectors'
+require 'css_model'
 require 'yaml'
 
-class Rule
+module Rule
   attr_accessor :parser
   attr_accessor :ruleset
   attr_accessor :rules
   attr_accessor :declarations
 
-  def initialize(rule) 
-    @parser ||= CssParser::Parser.new
-    add_rule!(rule)
-  end
-
   def add_rule!(rule)
+    @parser ||= CssParser::Parser.new
+    @declarations = {}
     parser.add_block! rule        
   end
 
   def add_declaration!(property, value)
     if value.nil? or value.empty?
-      @declarations.delete(property)
+      declarations.delete(property)
       return
     end
 
     value.gsub!(/;\Z/, '')
     is_important = !value.gsub!(CssParser::IMPORTANT_IN_PROPERTY_RX, '').nil?
     property = property.downcase.strip
-    @declarations[property] = {
+    declarations[property] = {
       :value => value, :is_important => is_important, :order => @order += 1
     }
   end
@@ -47,6 +43,17 @@ class Rule
     end
   end  
 
+  def pretty_declarations!
+    !declarations and return
+    puts "before: #{declarations.inspect}"
+    pretty = {}
+    declarations.each_pair do |key, value|                          
+      pretty[key] = CssParser::Declaration.new(key, value[:value], value[:is_important])
+    end    
+    @declarations = pretty    
+    puts "after: #{declarations.inspect}"    
+    declarations    
+  end
                                            
   # merge declarations by specificity
   def merge_declarations!   
@@ -54,20 +61,10 @@ class Rule
 
     @order = 0
     @declarations ||= {}
-  
-    parser.each_selector_sorted(:all, :order => :asc) do |sel|        
-      sel.declarations.each do |dec|
-        dec.gsub! /"/, ''
-        dec.gsub! /\[/, ''
-        dec.gsub! /\]/, ''
 
-        decs = dec.split(',')
-        decs.each do |d| 
-          parse_declarations!(d)              
-        end
-      
-      end
-    end             
+    parser.selector_declarations do |sel, decl|
+      parse_declarations!(decl)
+    end
   end   
 
   def duplicate?(decl)

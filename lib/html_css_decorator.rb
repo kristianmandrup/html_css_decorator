@@ -46,13 +46,11 @@ module CSS
 
     def pretty_declarations!
       !declarations and return
-      puts "before: #{declarations.inspect}"
       pretty = {}
       declarations.each_pair do |key, value|                          
         pretty[key] = CssParser::Declaration.new(key, value[:value], value[:is_important])
       end    
       @declarations = pretty    
-      puts "after: #{declarations.inspect}"    
       declarations    
     end
                                          

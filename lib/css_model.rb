@@ -30,14 +30,15 @@ module CSS
   
       cp.each_selector do |sel| 
         self.css(sel.selector).each do |elem|
-          elem.add_rule! sel.to_s
+          # puts "sel: #{sel.inspect}"
+          elem.add_rule! sel.to_text
         end
           
       end
 
       self.css('*').each do |elem|                 
         elem.merge_declarations!
-        elem.pretty_declarations!
+        elem.merge_style!
       end 
       self
     end

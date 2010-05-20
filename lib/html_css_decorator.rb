@@ -11,47 +11,38 @@ module CSS
     attr_accessor :declarations
 
     def add_rule!(rule)
+      # puts "add rule: #{rule.inspect}"
       @parser ||= CssParser::Parser.new
-      @declarations = {}
-      parser.add_block! rule        
+      @declarations = {}  
+            
+      parser.add_block! rule                 
     end
 
-    def add_declaration!(property, value)
-      if value.nil? or value.empty?
-        declarations.delete(property)
-        return
-      end
-
-      value.gsub!(/;\Z/, '')
-      is_important = !value.gsub!(CssParser::IMPORTANT_IN_PROPERTY_RX, '').nil?
-      property = property.downcase.strip
-      declarations[property] = {
-        :value => value, :is_important => is_important, :order => @order += 1
-      }
+    def add_declaration!(declaration)
+      return if !declaration                     
+      @declarations ||= {}  
+      dec = declaration.kind_of?(Array) ? declaration[1] : declaration
+      # puts "add dec: #{dec.inspect}"        
+      declarations[dec.property] = dec.to_text
     end
     alias_method :[]=, :add_declaration!
 
-    def parse_declarations!(block) # :nodoc: 
-      return unless block
-      block.gsub!(/(^[\s]*)|([\s]*$)/, '')
-      decs = block.split(/[\;$]+/m)
-      decs.each do |decs|
-        if matches = decs.match(/(.[^:]*)\:(.[^;]*)(;|\Z)/i)              
-          property, value, end_of_declaration = matches.captures
-
-          add_declaration!(property, value)          
-        end
+    def merge_declarations(selector)
+      @order = 0
+      
+      selector.each_declaration do |decl|        
+        add_declaration!(decl)
       end
-    end  
+    end
 
-    def pretty_declarations!
-      !declarations and return
-      pretty = {}
-      declarations.each_pair do |key, value|                          
-        pretty[key] = CssParser::Declaration.new(key, value[:value], value[:is_important])
-      end    
-      @declarations = pretty    
-      declarations    
+    def merge_style!
+      style = attribute('style')        
+      if style   
+        s = style.to_s + ';'
+        # puts "name: #{name}, decl: #{s}, spec: #{99999}"
+        selector = CssParser::Selector.new(name, s, 99999)
+        merge_declarations(selector)
+      end
     end
                                          
     # merge declarations by specificity
@@ -62,8 +53,9 @@ module CSS
       @declarations ||= {}
 
       parser.selector_declarations do |sel, decl|
-        parse_declarations!(decl)
-      end
+        # puts "decl: #{decl.inspect}"
+        add_declaration!(decl)
+      end   
     end   
 
     def duplicate?(decl)

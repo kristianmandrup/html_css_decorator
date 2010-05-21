@@ -11,7 +11,6 @@ module CSS
     attr_accessor :declarations
 
     def add_rule!(rule)
-      # puts "add rule: #{rule.inspect}"
       @parser ||= CssParserMaster::Parser.new
       @declarations = {}  
             
@@ -22,8 +21,7 @@ module CSS
       return if !declaration                     
       @declarations ||= {}  
       dec = declaration.kind_of?(Array) ? declaration[1] : declaration
-      # puts "add dec: #{dec.inspect}"        
-      declarations[dec.property] = dec.to_text
+      declarations[dec.property] = dec
     end
     alias_method :[]=, :add_declaration!
 
@@ -39,7 +37,6 @@ module CSS
       style = attribute('style')        
       if style   
         s = style.to_s + ';'
-        # puts "name: #{name}, decl: #{s}, spec: #{99999}"
         selector = CssParserMaster::Selector.new(name, s, 99999)
         merge_declarations(selector)
       end
@@ -53,7 +50,6 @@ module CSS
       @declarations ||= {}
 
       parser.selector_declarations do |sel, decl|
-        # puts "decl: #{decl.inspect}"
         add_declaration!(decl)
       end   
     end   

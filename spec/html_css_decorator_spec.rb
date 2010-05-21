@@ -7,7 +7,6 @@ describe "HtmlCssDecorator" do
         
     doc.css('*').each do |elem|  
       puts show(elem) if elem.declarations
-      # puts elem if elem.attribute('style')
     end
   end
 end    
@@ -16,7 +15,7 @@ def show(elem)
   s = "Tag: #{elem.name}\n"
   return s if !elem.declarations
   elem.declarations.each do |decl|
-    s += decl[1].to_s
+    s += decl[1].to_text
   end    
   s
 end

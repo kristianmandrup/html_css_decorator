@@ -19,7 +19,6 @@ module CSS
     end
   
     def apply_css!(options = {})     
-      # Use Css_Parser (Alan D.)
       cp = CssParserMaster::Parser.new  
       
       self.xpath('//link[@rel = "stylesheet"]').each do |stylesheet|
@@ -30,7 +29,6 @@ module CSS
   
       cp.each_selector do |sel| 
         self.css(sel.selector).each do |elem|
-          # puts "sel: #{sel.inspect}"
           elem.add_rule! sel.to_text
         end
           

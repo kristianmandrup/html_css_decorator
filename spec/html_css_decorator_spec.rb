@@ -4,9 +4,6 @@ describe "HtmlCssDecorator" do
   it "works" do
     doc = Nokogiri::HTML(File.open 'fixtures/test.html')    
     doc = CSS::Model.apply_to(doc, :css_path => File.dirname(__FILE__) + "/fixtures/")
-
-    # selector = CssParser::Selector.new('table', 'margin: 0px; padding: 0px;', 99999)    
-    # puts selector.inspect
         
     doc.css('*').each do |elem|  
       puts show(elem) if elem.declarations

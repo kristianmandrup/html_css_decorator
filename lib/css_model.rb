@@ -20,7 +20,7 @@ module CSS
   
     def apply_css!(options = {})     
       # Use Css_Parser (Alan D.)
-      cp = CssParser::Parser.new  
+      cp = CssParserMaster::Parser.new  
       
       self.xpath('//link[@rel = "stylesheet"]').each do |stylesheet|
         file_name = css_path + stylesheet['href']

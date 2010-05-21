@@ -11,7 +11,7 @@ begin
     gem.homepage = "http://github.com/kristianmandrup/html_css_decorator"
     gem.authors = ["Kristian Mandrup"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
-    gem.add_dependency "css_parser", ">=1.2.4"
+    gem.add_dependency "css_parser_master", ">=1.2.4"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 rescue LoadError

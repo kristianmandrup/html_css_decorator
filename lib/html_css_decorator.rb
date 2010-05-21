@@ -1,5 +1,5 @@
 require 'nokogiri'
-require 'css_parser'
+require 'css_parser_master'
 require 'css_model'
 require 'yaml'
 
@@ -12,7 +12,7 @@ module CSS
 
     def add_rule!(rule)
       # puts "add rule: #{rule.inspect}"
-      @parser ||= CssParser::Parser.new
+      @parser ||= CssParserMaster::Parser.new
       @declarations = {}  
             
       parser.add_block! rule                 
@@ -40,7 +40,7 @@ module CSS
       if style   
         s = style.to_s + ';'
         # puts "name: #{name}, decl: #{s}, spec: #{99999}"
-        selector = CssParser::Selector.new(name, s, 99999)
+        selector = CssParserMaster::Selector.new(name, s, 99999)
         merge_declarations(selector)
       end
     end
